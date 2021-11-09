@@ -1,7 +1,9 @@
-export default function ImageGalleryItem(params) {
+import s from './ImageGalleryItem.module.scss';
+
+export default function ImageGalleryItem() {
   return (
-    <li className="ImageGalleryItem">
-      <img src="" alt="" className="ImageGalleryItem-image" />
+    <li className={s.ImageGalleryItem}>
+      <img src="" alt="" className={s.ImageGalleryItemImage} />
     </li>
   );
 }
