@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import PropTypes from 'prop-types';
+
 import './App.scss';
 import Loader from '../Loader';
 import Modal from '../Modal';
@@ -11,7 +11,6 @@ import ImageGallery from '../ImageGallery';
 import Button from '../Button';
 
 export default class App extends Component {
-  // per_page = 12;
   state = {
     isActiveModal: false,
     isLoading: false,

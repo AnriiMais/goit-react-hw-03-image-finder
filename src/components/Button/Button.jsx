@@ -1,6 +1,6 @@
-import s from './Button.module.scss';
-
 import React from 'react';
+import PropTypes from 'prop-types';
+import s from './Button.module.scss';
 
 export default function Button({ onClickBtn }) {
   return (
@@ -9,3 +9,6 @@ export default function Button({ onClickBtn }) {
     </button>
   );
 }
+Button.propTypes = {
+  onClickBtn: PropTypes.func.isRequired,
+};

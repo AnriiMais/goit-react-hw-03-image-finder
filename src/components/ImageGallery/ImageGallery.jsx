@@ -1,5 +1,6 @@
+import PropTypes from 'prop-types';
 import s from './ImageGallery.module.scss';
-import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
+import ImageGalleryItem from '../ImageGalleryItem';
 
 export default function ImageGallery({
   data,
@@ -19,3 +20,8 @@ export default function ImageGallery({
     </ul>
   );
 }
+ImageGallery.propTypes = {
+  setModalImage: PropTypes.func.isRequired,
+  handleToggleForImage: PropTypes.func.isRequired,
+  data: PropTypes.arrayOf(PropTypes.object.isRequired),
+};

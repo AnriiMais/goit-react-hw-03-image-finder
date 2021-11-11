@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import s from './ImageGalleryItem.module.scss';
 
 export default function ImageGalleryItem({
@@ -21,3 +22,8 @@ export default function ImageGalleryItem({
     </li>
   );
 }
+ImageGalleryItem.propTypes = {
+  imgData: PropTypes.object.isRequired,
+  onClickModal: PropTypes.func.isRequired,
+  setModalImage: PropTypes.func.isRequired,
+};
