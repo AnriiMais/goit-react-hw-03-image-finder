@@ -1,19 +1,40 @@
 import { Component } from 'react';
-import s from './Modal.module.scss';
 import { createPortal } from 'react-dom';
+import { ReactComponent as CloseBtn } from '../../images/cross.svg';
+import s from './Modal.module.scss';
 
 const modalRoot = document.querySelector('#modal-root');
 
 export default class Modal extends Component {
+  componentDidMount = () => {
+    window.addEventListener('keypress', this.handleKeyPress);
+  };
+  componentWillUnmount = () => {
+    window.removeEventListener('keypress', this.handleKeyPress);
+  };
+  handleKeyPress = e => {
+    console.log(e.code);
+    if (e.code === 'KeyQ') {
+      this.props.onClickToggle();
+    }
+  };
+  handleClickOverlay = e => {
+    if (e.target === e.currentTarget) {
+      this.props.onClickToggle();
+    }
+  };
   render() {
-    const { onClickToggle } = this.props;
+    const { onClickToggle, modalImageUrl } = this.props;
     return createPortal(
-      <div className={s.overlay}>
+      <div className={s.overlay} onClick={this.handleClickOverlay}>
         <div className={s.modal}>
-          <h1>Mordalka</h1>
-          <img src="" alt="" />
-          <button type="button" onClick={onClickToggle}>
-            Close
+          <img src={modalImageUrl} alt="" className={s.modalImage} />
+          <button
+            type="button"
+            className={s.modalBtnClose}
+            onClick={onClickToggle}
+          >
+            <CloseBtn />
           </button>
         </div>
       </div>,

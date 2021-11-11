@@ -1,7 +1,9 @@
 import { Component } from 'react';
-// import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// import PropTypes from 'prop-types';
 import './App.scss';
+import Loader from '../Loader';
 import Modal from '../Modal';
 import { getRequest } from '../services/api';
 import Searchbar from '../Searchbar';
@@ -9,44 +11,80 @@ import ImageGallery from '../ImageGallery';
 import Button from '../Button';
 
 export default class App extends Component {
+  per_page = 12;
   state = {
     isActiveModal: false,
     isLoading: false,
     hits: [],
     page: 1,
     query: '',
+    error: null,
+    modalImage: '',
   };
-  componentDidMount = () => {
-    //   const { query, page } = this.state;
-    //   getRequest({ query, page }).then(({ hits }) => this.setState({ hits }));
-  };
+
   componentDidUpdate = (prevProps, prevState) => {
-    if (prevState.query !== this.state.query) {
-      const { query, page } = this.state;
-      getRequest({ query, page }).then(({ hits }) => this.setState({ hits }));
-      console.log('App update');
+    const { query, page } = this.state;
+    if (
+      prevState.query !== this.state.query ||
+      prevState.page !== this.state.page
+    ) {
+      // this.setState({ isLoading: true });
+      getRequest({ query, page })
+        .catch(error => this.setState({ error }))
+        .then(({ hits }) =>
+          this.setState(prev => {
+            return { hits: [...prev.hits, ...hits] };
+          }),
+        )
+        .finally(() => this.setState({ isLoading: false }));
+    }
+    if (prevState.hits !== this.state.hits && prevState.page !== 1) {
+      // console.log(prevState.page);
+      window.scrollTo({
+        top: document.documentElement.offsetHeight,
+        behavior: 'smooth',
+      });
     }
   };
   getQueryOnSubmit = inputQuery => {
-    this.setState({ query: inputQuery, hits: [], page: 1 });
+    if (this.state.query === inputQuery) return;
+    this.setState({ query: inputQuery, hits: [], page: 1, isLoading: true });
   };
-  handleToggle = () => {
+  handleToggle = e => {
     const { isActiveModal } = this.state;
     this.setState({ isActiveModal: !isActiveModal });
+    // if (e.target === e.currentTarget) {
+    //   this.setState({ isActiveModal: !isActiveModal });
+    // }
+  };
+  onClickChangePage = () => {
+    this.setState(prev => ({ page: prev.page + 1, isLoading: true }));
+  };
+  setModalImage = src => {
+    this.setState({ modalImage: src });
   };
   render() {
-    // console.log(process.env);
-    const { isActiveModal, hits } = this.state;
+    const { isActiveModal, hits, isLoading, error, modalImage } = this.state;
     return (
       <div className="App">
-        {isActiveModal && <Modal onClickToggle={this.handleToggle} />}
         <Searchbar getOnSubmit={this.getQueryOnSubmit} />
-        {/* {hits.length > 0 && ( */}
-        {/* <> */}
-        <ImageGallery data={hits} />
-        <Button />
-        {/* </> */}
-        {/* )} */}
+        {error && <h1>{error.message}</h1>}
+        {isActiveModal && (
+          <Modal onClickToggle={this.handleToggle} modalImageUrl={modalImage} />
+        )}
+        {isLoading && <Loader />}
+        {hits && hits.length > 0 && (
+          <>
+            <ImageGallery
+              data={hits}
+              handleToggleForImage={this.handleToggle}
+              setModalImage={this.setModalImage}
+            />
+            {hits.length >= this.per_page && (
+              <Button onClickBtn={this.onClickChangePage} />
+            )}
+          </>
+        )}
 
         <ToastContainer />
       </div>

@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import { toast } from 'react-toastify';
-
 import s from './Searchbar.module.scss';
 
 export default class Searchbar extends Component {
@@ -14,11 +13,20 @@ export default class Searchbar extends Component {
 
   submitQueryForm = e => {
     e.preventDefault();
-    if (this.state.query === '') {
-      toast.error('Bad request!');
+    if (this.state.query.trim() === '') {
+      toast.warn('Please enter text', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      });
       return;
     }
-    this.props.getOnSubmit(this.state.query);
+    this.props.getOnSubmit(this.state.query.toLowerCase());
     this.setState({ query: '' });
   };
   render() {

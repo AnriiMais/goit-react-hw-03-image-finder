@@ -9,9 +9,22 @@
   align-items: center;
   background-color: rgba(0, 0, 0, 0.8);
   z-index: 1200;
+  overflow: hidden;
 }
 
 .modal {
+  position: relative;
   max-width: calc(100vw - 48px);
   max-height: calc(100vh - 24px);
+}
+.modalImage {
+  max-width: 900px;
+}
+.modalBtnClose {
+  background-color: inherit;
+  position: absolute;
+  top: 5px;
+  left: 96%;
+  border: none;
+  fill: rgb(169, 169, 169);
 }

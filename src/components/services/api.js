@@ -1,15 +1,14 @@
 import axios from 'axios';
-
-axios.defaults.baseURL = 'https://pixabay.com/ap/';
+// import PropTypes from 'prop-types';
+axios.defaults.baseURL = 'https://pixabay.com/api/';
 const API_KEY = process.env.REACT_APP_API_KEY;
-// console.log('=> API_KEY:', API_KEY);
+
 const setParams = params => {
-  //   console.log(axios.defaults);
   return (axios.defaults.params = { key: API_KEY, ...params });
 };
 export const getRequest = ({ query, page }) => {
   setParams({
-    q: encodeURIComponent(query),
+    q: query,
     page,
     image_type: 'photo',
     orientation: 'horizontal',
@@ -17,6 +16,13 @@ export const getRequest = ({ query, page }) => {
   });
   return axios
     .get()
-    .then(res => res.data)
-    .catch(err => new Error(err.message));
+    .then(res => {
+      if (res.status >= 200 && res.status < 399) {
+        return res.data;
+      }
+      return Promise.reject(new Error('Oops something wrong...'));
+    })
+    .catch(err => {
+      throw err;
+    });
 };
