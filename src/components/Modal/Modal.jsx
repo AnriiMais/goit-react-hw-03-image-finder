@@ -13,7 +13,6 @@ export default class Modal extends Component {
     window.removeEventListener('keydown', this.handleKeyPress);
   };
   handleKeyPress = e => {
-    console.log(e.code);
     if (e.code === 'Escape') {
       this.props.onClickToggle();
     }
