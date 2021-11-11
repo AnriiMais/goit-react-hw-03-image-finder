@@ -11,7 +11,7 @@ import ImageGallery from '../ImageGallery';
 import Button from '../Button';
 
 export default class App extends Component {
-  per_page = 12;
+  // per_page = 12;
   state = {
     isActiveModal: false,
     isLoading: false,
@@ -20,6 +20,7 @@ export default class App extends Component {
     query: '',
     error: null,
     modalImage: '',
+    total: 0,
   };
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -28,18 +29,16 @@ export default class App extends Component {
       prevState.query !== this.state.query ||
       prevState.page !== this.state.page
     ) {
-      // this.setState({ isLoading: true });
       getRequest({ query, page })
         .catch(error => this.setState({ error }))
-        .then(({ hits }) =>
+        .then(({ hits, total }) =>
           this.setState(prev => {
-            return { hits: [...prev.hits, ...hits] };
+            return { hits: [...prev.hits, ...hits], total };
           }),
         )
         .finally(() => this.setState({ isLoading: false }));
     }
-    if (prevState.hits !== this.state.hits && prevState.page !== 1) {
-      // console.log(prevState.page);
+    if (prevState.hits !== this.state.hits && this.state.page !== 1) {
       window.scrollTo({
         top: document.documentElement.offsetHeight,
         behavior: 'smooth',
@@ -53,9 +52,6 @@ export default class App extends Component {
   handleToggle = e => {
     const { isActiveModal } = this.state;
     this.setState({ isActiveModal: !isActiveModal });
-    // if (e.target === e.currentTarget) {
-    //   this.setState({ isActiveModal: !isActiveModal });
-    // }
   };
   onClickChangePage = () => {
     this.setState(prev => ({ page: prev.page + 1, isLoading: true }));
@@ -64,7 +60,8 @@ export default class App extends Component {
     this.setState({ modalImage: src });
   };
   render() {
-    const { isActiveModal, hits, isLoading, error, modalImage } = this.state;
+    const { isActiveModal, hits, isLoading, error, modalImage, total } =
+      this.state;
     return (
       <div className="App">
         <Searchbar getOnSubmit={this.getQueryOnSubmit} />
@@ -80,7 +77,7 @@ export default class App extends Component {
               handleToggleForImage={this.handleToggle}
               setModalImage={this.setModalImage}
             />
-            {hits.length >= this.per_page && (
+            {hits.length < total && (
               <Button onClickBtn={this.onClickChangePage} />
             )}
           </>
