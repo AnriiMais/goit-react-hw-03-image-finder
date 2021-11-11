@@ -7,14 +7,14 @@ const modalRoot = document.querySelector('#modal-root');
 
 export default class Modal extends Component {
   componentDidMount = () => {
-    window.addEventListener('keypress', this.handleKeyPress);
+    window.addEventListener('keydown', this.handleKeyPress);
   };
   componentWillUnmount = () => {
-    window.removeEventListener('keypress', this.handleKeyPress);
+    window.removeEventListener('keydown', this.handleKeyPress);
   };
   handleKeyPress = e => {
     console.log(e.code);
-    if (e.code === 'KeyQ') {
+    if (e.code === 'Escape') {
       this.props.onClickToggle();
     }
   };
